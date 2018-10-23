@@ -8,12 +8,30 @@
 
 		private var gravity: Point = new Point(0, 100);
 		private var velocity: Point = new Point(1, 5);
+		
+		private const HORIZONTAL_ACCELERATION: Number = 100;
+		private const HORIZONTAL_DECELERATION: Number = 100;
 
 		public function Player() {
 			// constructor code
 		} // ends constructor
 
 		public function update(): void {
+			
+			if (KeyboardInput.keyLeft) velocity.x -= HORIZONTAL_ACCELERATION * Time.dt;
+			if (KeyboardInput.keyRight) velocity.x += HORIZONTAL_ACCELERATION * Time.dt;
+			
+			if (!KeyboardInput.keyLeft && !KeyboardInput.keyRight) { // left and right not being pressed...
+				if (velocity.x < 0) { // moving left
+					velocity.x += HORIZONTAL_DECELERATION * Time.dt; // accelerate right
+					if (velocity.x > 0) velocity.x = 0; // clamp at 0
+				}
+				
+				if (velocity.x > 0) {
+					velocity.x -= HORIZONTAL_DECELERATION * Time.dt; // accelerate left
+					if (velocity.x < 0) velocity.x = 0; // clamp at 0
+				}
+			}
 
 			doPhysics();
 

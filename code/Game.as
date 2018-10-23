@@ -7,6 +7,7 @@
 	public class Game extends MovieClip {
 		
 		public function Game() {
+			KeyboardInput.setup(stage);
 			addEventListener(Event.ENTER_FRAME, gameLoop);
 		}
 		
