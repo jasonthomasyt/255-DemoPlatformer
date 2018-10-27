@@ -9,7 +9,10 @@
 	 */
 	public class KeyboardInput {
 		
+		/** The state of each key. */
 		static public var keysState: Array = new Array();
+		
+		/** The previous state of each key. */
 		static public var keysPrevState: Array = new Array();
 
 		/**
@@ -28,13 +31,12 @@
 		 */
 		static public function update(): void {
 			keysPrevState = keysState.slice(); // in this context, slice() gives us a copy of the array
-		}
+		} // end update
 
 		/** 
 		 * Updates the key booleans when a certain key is pressed.
 		 * @param keyCode The keycode of the key that is pressed.
 		 * @param isDown Switches to true if the key has been pressed.
-		 * @return void This method should not return anything.
 		 */
 		static private function updateKey(keyCode: int, isDown: Boolean): void {
 
@@ -45,7 +47,6 @@
 		/**
 		 * If key is pressed, set boolean to true.
 		 * @param e The keyboard input event.
-		 * @return void This method should not return anything.
 		 */
 		static private function handleKeyDown(e: KeyboardEvent): void {
 
@@ -56,7 +57,6 @@
 		/**
 		 * If key is not pressed, set boolean to false.
 		 * @param e The keyboard input event.
-		 * @return void This method should not return anything.
 		 */
 		static private function handleKeyUp(e: KeyboardEvent): void {
 
@@ -64,18 +64,26 @@
 
 		} // ends handleKeyUp
 		
+		/**
+		 * Checks if the key is currently pressed.
+		 * @return The true/false value for the state of the key (if it is currently being pressed or not).
+		 */
 		static public function IsKeyDown(keyCode: int): Boolean {
 			if (keyCode < 0) return false;
 			if (keyCode >= keysState.length) return false;
 			
 			return keysState[keyCode];
-		}
+		} // ends IsKeyDown
 		
+		/**
+		 * Checks if the key has been pressed.
+		 * @return The true/false value for the key (if it has just been pressed or not).
+		 */
 		static public function OnKeyDown(keyCode: int): Boolean {
 			if (keyCode < 0) return false;
 			if (keyCode >= keysState.length) return false;
 			
 			return (keysState[keyCode] && !keysPrevState[keyCode]);
-		}
+		} // ends OnKeyDown
 	} // ends class
 } // ends package
