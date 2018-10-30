@@ -9,26 +9,11 @@
 	 */
 	public class Player extends MovieClip {
 
-		/** Checks if the player is able to double jump. */
-		private var canDoubleJump: Boolean = false;
-		
-		/** Checks if the player has released the jump button. */
-		private var releasedJumpButton: Boolean = false;
-		
-		/** Checks if the player has pressed the space bar. */
-		private var spacePressed: Boolean = false;
-		
-		/** Checks if the player has jumped. */
-		private var hasJumped: Boolean = false;
-
 		/** Sets the gravity for the player. */
-		private var gravity: Point = new Point(0, 100);
+		private var gravity: Point = new Point(0, 1000);
 		
 		/** Sets the X max speed for the player. */
 		private var maxSpeedX: Number = 200;
-		
-		/** Sets the Y max speed for the player. */
-		private var maxSpeedY: Number = 200;
 		
 		/** Sets the velocity for the player. */
 		private var velocity: Point = new Point(1, 5);
@@ -38,12 +23,21 @@
 		
 		/** Sets the horizontal deceleration constant for the player. */
 		private const HORIZONTAL_DECELERATION: Number = 800;
-
-		/** Sets the vertical acceleration constant for the player. */
-		private const VERTICAL_ACCELERATION: Number = 3000;
 		
-		/** Sets the vertical deceleration constant for the player. */
-		private const VERTICAL_DECELERATION: Number = 2500;
+		/** Checks if the player is on the ground. */
+		private var isGrounded:Boolean = false;
+		
+		/** Whether or not the player is moving upward in a jump.  This affects gravity. */
+		private var isJumping:Boolean = false;
+		
+		/** How many times the player can currently jump in the air. */
+		private var airJumpsLeft:int = 1;
+		
+		/** The max number of jumps the player can perform in the air. */
+		private var airJumpsMax:int = 1;
+		
+		/** The player's jump velocity. */
+		private var jumpVelocity:Number = 400;
 
 		/**
 		 * The Player constructor class
@@ -72,22 +66,22 @@
 		 * Handles the jumping action for the player.
 		 */
 		private function handleJumping(): void {
-			if (KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
-				spacePressed = true;
-
-				if (!hasJumped && y > 300) {
-					velocity.y = -200;
-					velocity.y -= VERTICAL_ACCELERATION * Time.dt;
-				} else if (y <= 300) {
-					hasJumped = true;
-				}
-			} else {
-				spacePressed = false;
-
-				if (velocity.y > 0) {
-					velocity.y += VERTICAL_DECELERATION * Time.dt; // accelerate down
+			if (KeyboardInput.OnKeyDown(Keyboard.SPACE)) {
+				if (isGrounded) { // we are on the ground...
+					isGrounded = false; // not on ground
+					velocity.y = -jumpVelocity; // apply an impulse up
+					isJumping = true;
+				} else { // in air, attempting a double-jump
+					if (airJumpsLeft > 0) { // if we have air-jumps left:
+						velocity.y = -jumpVelocity; // air jump
+						airJumpsLeft--;
+						isJumping = true;
+					}
 				}
 			}
+			
+			if (!KeyboardInput.IsKeyDown(Keyboard.SPACE)) isJumping = false;
+			if (velocity.y > 0) isJumping = false;
 		} // ends handleJumping
 
 		/**
@@ -116,15 +110,18 @@
 		 * Sets the velocity to the gravity and max speed.
 		 */
 		private function doPhysics(): void {
+			
+			var gravityMultiplier:Number = .5;
+			
+			if (!isJumping) gravityMultiplier = 2;
+			
 			// apply gravity to velocity:
-			velocity.x += gravity.x * Time.dt;
-			velocity.y += gravity.y * Time.dt;
+			//velocity.x += gravity.x * Time.dt * gravityMultiplier;
+			velocity.y += gravity.y * Time.dt * gravityMultiplier;
 
 			// constrain to maxSpeed:
 			if (velocity.x > maxSpeedX) velocity.x = maxSpeedX; // clamp going right
 			if (velocity.x < -maxSpeedX) velocity.x = -maxSpeedX; // clamp going left
-			if (velocity.y > maxSpeedY) velocity.y = maxSpeedY;
-			if (velocity.y < -maxSpeedY) velocity.y = -maxSpeedY;
 
 			// apply velocity to position:
 			x += velocity.x * Time.dt;
@@ -140,11 +137,8 @@
 			if (y >= ground) {
 				y = ground; // clamp
 				velocity.y = 0;
-				canDoubleJump = true;
-				releasedJumpButton = false;
-				if (!KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
-					hasJumped = false;
-				}
+				isGrounded = true;
+				airJumpsLeft = airJumpsMax;
 			} else {
 				handleDoubleJump();
 			}
@@ -155,16 +149,7 @@
 		 * Checks to see if the player is able to double jump while in the air.
 		 */
 		private function handleDoubleJump(): void {
-			if (spacePressed == false) {
-				releasedJumpButton = true;
-			}
-
-			if (canDoubleJump && releasedJumpButton && spacePressed) {
-				velocity.y = 0;
-				velocity.y = -200;
-				velocity.y -= VERTICAL_ACCELERATION * Time.dt;
-				canDoubleJump = false;
-			}
+			
 		} // ends handleDoubleJump
 	} // ends Player class
 
