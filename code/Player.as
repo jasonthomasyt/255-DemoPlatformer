@@ -24,8 +24,11 @@
 		/** Sets the gravity for the player. */
 		private var gravity: Point = new Point(0, 100);
 		
-		/** Sets the max speed for the player. */
-		private var maxSpeed: Number = 200;
+		/** Sets the X max speed for the player. */
+		private var maxSpeedX: Number = 200;
+		
+		/** Sets the Y max speed for the player. */
+		private var maxSpeedY: Number = 200;
 		
 		/** Sets the velocity for the player. */
 		private var velocity: Point = new Point(1, 5);
@@ -73,6 +76,7 @@
 				spacePressed = true;
 
 				if (!hasJumped && y > 300) {
+					velocity.y = -200;
 					velocity.y -= VERTICAL_ACCELERATION * Time.dt;
 				} else if (y <= 300) {
 					hasJumped = true;
@@ -117,10 +121,10 @@
 			velocity.y += gravity.y * Time.dt;
 
 			// constrain to maxSpeed:
-			if (velocity.x > maxSpeed) velocity.x = maxSpeed; // clamp going right
-			if (velocity.x < -maxSpeed) velocity.x = -maxSpeed; // clamp going left
-			if (velocity.y > maxSpeed) velocity.y = maxSpeed;
-			if (velocity.y < -maxSpeed) velocity.y = -maxSpeed;
+			if (velocity.x > maxSpeedX) velocity.x = maxSpeedX; // clamp going right
+			if (velocity.x < -maxSpeedX) velocity.x = -maxSpeedX; // clamp going left
+			if (velocity.y > maxSpeedY) velocity.y = maxSpeedY;
+			if (velocity.y < -maxSpeedY) velocity.y = -maxSpeedY;
 
 			// apply velocity to position:
 			x += velocity.x * Time.dt;
@@ -157,6 +161,7 @@
 
 			if (canDoubleJump && releasedJumpButton && spacePressed) {
 				velocity.y = 0;
+				velocity.y = -200;
 				velocity.y -= VERTICAL_ACCELERATION * Time.dt;
 				canDoubleJump = false;
 			}
