@@ -38,12 +38,14 @@
 		
 		/** The player's jump velocity. */
 		private var jumpVelocity:Number = 400;
+		
+		public var collider:AABB;
 
 		/**
 		 * The Player constructor class
 		 */
 		public function Player() {
-			// constructor code
+			collider = new AABB(width / 2, height / 2);
 		} // ends constructor
 
 		/**
@@ -59,6 +61,8 @@
 			doPhysics();
 
 			detectGround();
+			
+			collider.calcEdges(x, y);
 
 		} // ends update
 
@@ -139,18 +143,8 @@
 				velocity.y = 0;
 				isGrounded = true;
 				airJumpsLeft = airJumpsMax;
-			} else {
-				handleDoubleJump();
 			}
 		} // ends detectGround
-
-		/**
-		 * Handles the double jump action for the player.
-		 * Checks to see if the player is able to double jump while in the air.
-		 */
-		private function handleDoubleJump(): void {
-			
-		} // ends handleDoubleJump
 	} // ends Player class
 
 } // ends package
