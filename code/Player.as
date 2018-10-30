@@ -81,7 +81,7 @@
 				spacePressed = false;
 
 				if (velocity.y > 0) {
-					velocity.y += VERTICAL_DECELERATION * Time.dt; // accelerate left
+					velocity.y += VERTICAL_DECELERATION * Time.dt; // accelerate down
 				}
 			}
 		} // ends handleJumping
