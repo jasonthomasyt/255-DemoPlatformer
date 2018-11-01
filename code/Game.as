@@ -1,13 +1,16 @@
 ﻿package code {
-	
+
 	import flash.display.MovieClip;
 	import flash.events.Event;
-	
+	import flash.geom.Point;
+
 	/**
 	 * The class for the Game.
 	 */
 	public class Game extends MovieClip {
-		
+
+		static public var platforms: Array = new Array();
+
 		/**
 		 * The constructor function for Game.
 		 * Sets up keyboard input and our game loop.
@@ -16,26 +19,32 @@
 			KeyboardInput.setup(stage);
 			addEventListener(Event.ENTER_FRAME, gameLoop);
 		} // ends Game
-		
+
 		/**
 		 * The gameLoop design pattern.
 		 * Updates time, the player, and keyboard input.
 		 */
-		private function gameLoop(e:Event): void {
+		private function gameLoop(e: Event): void {
 			Time.update();
 			player.update();
-			
+
 			doCollisionDetection();
-			
+
 			KeyboardInput.update();
 		} // ends gameLoop
-		
-		private function doCollisionDetection():void {
-			if (player.collider.checkOverlap(platform.collider)) {
-				platform.alpha = .5;
-			} else {
-				platform.alpha = 1;
-			}
-		}
+
+		private function doCollisionDetection(): void {
+
+			for (var i: int = 0; i < platforms.length; i++) {
+				if (player.collider.checkOverlap(platforms[i].collider)) { // if overlapping...
+					// find the fix:
+					var fix: Point = player.collider.findOverlapFix(platforms[i].collider);
+
+					// apply the fix:
+					player.applyFix(fix);
+				}
+			} // ends for
+
+		} // ends doCollisionDetection
 	} // ends Game class
 } // ends package

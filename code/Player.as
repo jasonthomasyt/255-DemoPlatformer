@@ -39,6 +39,10 @@
 		/** The player's jump velocity. */
 		private var jumpVelocity:Number = 400;
 		
+		/** Detects the ground in the game. */
+		var ground: Number = 350;
+		
+		/** The collider for the player. */
 		public var collider:AABB;
 
 		/**
@@ -63,6 +67,10 @@
 			detectGround();
 			
 			collider.calcEdges(x, y);
+			
+			if (y < ground){
+				isGrounded = false; // this allows us to walk off edges and only be allowed one air jump.
+			}
 
 		} // ends update
 
@@ -137,7 +145,6 @@
 		 */
 		private function detectGround(): void {
 			// look at y position
-			var ground: Number = 350;
 			if (y >= ground) {
 				y = ground; // clamp
 				velocity.y = 0;
@@ -145,6 +152,25 @@
 				airJumpsLeft = airJumpsMax;
 			}
 		} // ends detectGround
+		
+		public function applyFix(fix: Point):void {
+			if (fix.x != 0){
+				x += fix.x;
+				velocity.x = 0;
+			}
+			
+			if (fix.y != 0) {
+				y += fix.y;
+				velocity.y = 0;
+			}
+			
+			if (fix.y < 0) { // we moved the player up, so they are on the ground.
+				isGrounded = true;
+				airJumpsLeft = airJumpsMax;
+			}
+			
+			collider.calcEdges(x, y);
+		}
 	} // ends Player class
 
 } // ends package
