@@ -9,6 +9,7 @@
 	 */
 	public class Game extends MovieClip {
 
+		/** Holds all platform game objects. */
 		static public var platforms: Array = new Array();
 
 		/**
@@ -26,6 +27,7 @@
 		 */
 		private function gameLoop(e: Event): void {
 			Time.update();
+			
 			player.update();
 
 			doCollisionDetection();
@@ -33,6 +35,9 @@
 			KeyboardInput.update();
 		} // ends gameLoop
 
+		/**
+		 * Detects collision for the player using AABB collision detection and response.
+		 */
 		private function doCollisionDetection(): void {
 
 			for (var i: int = 0; i < platforms.length; i++) {
@@ -44,7 +49,7 @@
 					player.applyFix(fix);
 				}
 			} // ends for
-
+			
 		} // ends doCollisionDetection
 	} // ends Game class
 } // ends package

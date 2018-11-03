@@ -153,6 +153,10 @@
 			}
 		} // ends detectGround
 		
+		/**
+		 * Applies the overlap fix detected by the collider.
+		 * Adjusts the player position according to the fix.
+		 */
 		public function applyFix(fix: Point):void {
 			if (fix.x != 0){
 				x += fix.x;
@@ -170,7 +174,6 @@
 			}
 			
 			collider.calcEdges(x, y);
-		}
+		} // ends applyFix
 	} // ends Player class
-
 } // ends package

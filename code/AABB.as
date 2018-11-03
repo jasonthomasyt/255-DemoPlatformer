@@ -1,29 +1,54 @@
 ﻿package code {
 	import flash.geom.Point;
 
+	/**
+	 * The class for the AABB collider.
+	 */
 	public class AABB {
 
+		/** Half of the width of the object. */
 		private var halfWidth: Number;
+		
+		/** Half of the height of the object. */
 		private var halfHeight: Number;
 
+		/** The minimum x value of the object's width. */
 		public var xMin: Number;
+		
+		/** The maximum x value of the object's width. */
 		public var xMax: Number;
+		
+		/** The minimum y value of the object's width. */
 		public var yMin: Number;
+		
+		/** The maximum y value of the object's width. */
 		public var yMax: Number;
 
+		/**
+		 * The constructor for AABB.
+		 * @param halfWidth Half the width of the object.
+		 * @param halfHeight Half the height of the object.
+		 */
 		public function AABB(halfWidth: Number, halfHeight: Number) {
-			setSize(halfWidth, halfHeight);
-		}
+			setSize(halfWidth, halfHeight); // Sets the collider's size.
+		} // ends AABB
 
+		/**
+		 * Sets the size of the collider according to the object's width and height.
+		 * @param halfWidth Half the width of the object.
+		 * @param halfHeight Half the height of the object.
+		 */
 		public function setSize(halfWidth: Number, halfHeight: Number): void {
 			this.halfWidth = halfWidth;
 			this.halfHeight = halfHeight;
 			// recalculate edges!!!
-			calcEdges((xMin + xMax) / 2, (yMin + yMax) / 2);
-		}
+			calcEdges((xMin + xMax) / 2, (yMin + yMax) / 2); // Calculate the collider's edges.
+		} // ends setSize
 
 		/**
 		 * Calculate the position of the 4 edges from the center (x, y) position.
+		 * @param x The object's current x position.
+		 * @param y The object's current y position.
 		 */
 		public function calcEdges(x: Number, y: Number): void {
 			xMin = x - halfWidth;
@@ -31,7 +56,7 @@
 
 			yMin = y - halfHeight;
 			yMax = y + halfHeight;
-		}
+		} // ends calcEdges
 
 		/**
 		 * This function checks to see if this AABB
@@ -48,7 +73,7 @@
 			if (this.yMin > other.yMax) return false; // gap above
 
 			return true;
-		}
+		} // ends checkOverlap
 
 		/**
 		 * This function calculates how long to move THIS box so that it no longer intersects another AABB.
@@ -70,7 +95,6 @@
 			else fix.x = 0;
 			
 			return fix;
-		}
-	}
-
-}
+		} // ends findOverlapFix
+	} // ends class
+} // ends package
